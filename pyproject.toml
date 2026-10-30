@@ -1,0 +1,16 @@
+[project]
+name = "Docker-Plane"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [{ name = "Ethan Robert", email = "ethan.robert@ik.me" }]
+dependencies = ["fastapi[standard]>=0.162.0"]
+requires-python = "==3.14.*"
+readme = "README.md"
+license = "MIT"
+
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+start = "fastapi dev"
