@@ -34,3 +34,16 @@ async def create_deployment(deployment: Deployment):
 
     else:
         raise HTTPException(409)
+
+@app.get("/deployments")
+async def list_deployments():
+
+    res = []
+
+    for file in os.listdir(APP_DIR):
+
+        with open(os.path.join(APP_DIR, file, "manifest.json")) as manifest_file: 
+            res.append(json.load(manifest_file))
+
+    return res
+        
