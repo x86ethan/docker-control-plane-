@@ -3,6 +3,8 @@ import json, yaml
 from pydantic import BaseModel 
 import os 
 
+import subprocess
+
 
 app = FastAPI() 
 
@@ -62,4 +64,19 @@ async def get_deployment_details(deployment: str):
 
         return res
     
+    raise HTTPException(404)
+
+@app.get("/deployments/{deployment}/start")
+def start_deployment(deployment: str): 
+
+    DPL_DIR = os.path.join(APP_DIR, deployment)
+    if os.path.exists(DPL_DIR):
+
+        docker = subprocess.run(["docker-compose", "-f", os.path.join(DPL_DIR, "compose.yml"), "up", "-d", ], capture_output=True)
+        if docker.returncode != 0:
+            raise HTTPException(500, detail = docker.stderr.decode())
+
+        return {"status": "up"}
+        
+
     raise HTTPException(404)
