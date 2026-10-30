@@ -46,4 +46,20 @@ async def list_deployments():
             res.append(json.load(manifest_file))
 
     return res
-        
+
+
+@app.get("/deployments/{deployment}")
+async def get_deployment_details(deployment: str): 
+
+    DPL_DIR = os.path.join(APP_DIR, deployment)
+    if os.path.exists(DPL_DIR):
+
+        with open(os.path.join(DPL_DIR, "manifest.json")) as manifest:
+            res = json.load(manifest)
+
+        with open(os.path.join(DPL_DIR, "compose.yml")) as compose: 
+            res["compose"] = yaml.safe_load(compose)
+
+        return res
+    
+    raise HTTPException(404)
