@@ -72,7 +72,7 @@ def start_deployment(deployment: str):
     DPL_DIR = os.path.join(APP_DIR, deployment)
     if os.path.exists(DPL_DIR):
 
-        docker = subprocess.run(["docker-compose", "-f", os.path.join(DPL_DIR, "compose.yml"), "up", "-d", ], capture_output=True)
+        docker = subprocess.run(["docker-compose", "-f", os.path.join(DPL_DIR, "compose.yml"), "up", "-d", ">",], capture_output=False)
         if docker.returncode != 0:
             raise HTTPException(500, detail = docker.stderr.decode())
 
@@ -80,3 +80,18 @@ def start_deployment(deployment: str):
         
 
     raise HTTPException(404)
+
+@app.get("/deployments/{deployment}/stop")
+def stop_deployment(deployment: str):
+
+    DPL_DIR = os.path.join(APP_DIR, deployment)
+    if os.path.exists(DPL_DIR):
+
+        docker = subprocess.run(["docker-compose", "-f", os.path.join(DPL_DIR, "compose.yml"), "down"], capture_output=False)
+        if docker.returncode != 0:
+            raise HTTPException(500, detail = docker.stderr.decode())
+
+        return {"status": "down"}
+            
+    
+        raise HTTPException(404)
