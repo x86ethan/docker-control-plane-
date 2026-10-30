@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import json, yaml
 from pydantic import BaseModel 
 import os 
@@ -31,3 +31,6 @@ async def create_deployment(deployment: Deployment):
 
         with open(os.path.join(DPL_DIR, "compose.yml"), "w") as compose:
             yaml.safe_dump(deployment.__dict__["compose"], compose)
+
+    else:
+        raise HTTPException(409)
