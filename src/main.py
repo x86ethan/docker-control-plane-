@@ -62,6 +62,16 @@ async def get_deployment_details(deployment: str):
         with open(os.path.join(DPL_DIR, "compose.yml")) as compose: 
             res["compose"] = yaml.safe_load(compose)
 
+        # Get status
+        docker = subprocess.run(["docker-compose", "-f", os.path.join(DPL_DIR, "compose.yml"), "ps", "--format", "json"], capture_output=True)
+        if docker.returncode != 0:
+            raise HTTPException(500, detail=docker.stderr.decode())
+
+        if len(docker.stdout.decode()) == 0: 
+            res["status"] = "down"
+        else: 
+            res["status"] = "up"
+    
         return res
     
     raise HTTPException(404)
