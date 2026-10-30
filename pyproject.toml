@@ -13,4 +13,4 @@ license = "MIT"
 distribution = false
 
 [tool.pdm.scripts]
-start = "fastapi dev"
+dev = "fastapi dev src/main.py"
